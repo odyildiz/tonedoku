@@ -14,7 +14,7 @@ function App() {
   }, [loadFromStorage]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/tonedoku">
       <div className="flex min-h-screen w-full flex-col items-center justify-center">
         <Routes>
           <Route path="/" element={<HomePage />} />
