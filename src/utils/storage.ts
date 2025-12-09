@@ -3,9 +3,12 @@ const STORAGE_KEYS = {
   PROGRESS: 'tonedoku_progress',
 } as const;
 
+export type NoteNotation = 'standard' | 'solfege';
+
 export interface Settings {
   soundEnabled: boolean;
   volume: number;
+  noteNotation: NoteNotation;
 }
 
 export interface UserProgress {
@@ -19,6 +22,7 @@ export interface UserProgress {
 const DEFAULT_SETTINGS: Settings = {
   soundEnabled: true,
   volume: 0.7,
+  noteNotation: 'standard',
 };
 
 const DEFAULT_PROGRESS: UserProgress = {

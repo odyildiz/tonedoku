@@ -1,5 +1,7 @@
 import React from 'react';
 import type { NoteName } from '../../types/scales';
+import { useSettingsStore } from '../../stores/settingsStore';
+import { getDisplayNoteName } from '../../utils/noteDisplay';
 
 interface NoteSelectorProps {
     selectedNote: NoteName | null;
@@ -10,6 +12,8 @@ interface NoteSelectorProps {
 const NOTES: NoteName[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
 const NoteSelector: React.FC<NoteSelectorProps> = React.memo(({ selectedNote, onNoteSelect, disabled = false }) => {
+    const notation = useSettingsStore((state) => state.noteNotation);
+
     return (
         <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 md:gap-3 py-1 sm:py-2">
             {NOTES.map((note) => (
@@ -26,7 +30,7 @@ const NoteSelector: React.FC<NoteSelectorProps> = React.memo(({ selectedNote, on
                         } ${disabled ? 'opacity-50 cursor-not-allowed hover:scale-100 active:scale-100' : ''}
                     `}
                 >
-                    {note}
+                    {getDisplayNoteName(note, notation)}
                 </button>
             ))}
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Note } from '../../types/scales';
+import { useNoteDisplay } from '../../hooks/useNoteDisplay';
 
 interface ScaleSlotProps {
     note: Note | null;
@@ -10,6 +11,7 @@ interface ScaleSlotProps {
 }
 
 const ScaleSlot: React.FC<ScaleSlotProps> = ({ note, isLocked, isActive, isUserAnswer, onClick }) => {
+    const displayNote = useNoteDisplay();
     // Determine styles based on state - Responsive sizing: smaller on mobile
     let baseStyles = "flex items-center justify-center w-10 h-14 sm:w-12 sm:h-16 md:w-14 md:h-18 rounded-lg text-lg sm:text-xl md:text-2xl font-bold transition-all border-2 duration-300 touch-manipulation";
 
@@ -39,7 +41,7 @@ const ScaleSlot: React.FC<ScaleSlotProps> = ({ note, isLocked, isActive, isUserA
 
     return (
         <div className={baseStyles} onClick={isLocked ? undefined : onClick}>
-            {note ? note.display : '?'}
+            {note ? displayNote(note) : '?'}
         </div>
     );
 };

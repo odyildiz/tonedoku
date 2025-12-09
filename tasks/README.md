@@ -18,6 +18,8 @@ This folder contains all tasks required to build the Tonedoku MVP - a music scal
 | 09 | [Navigation Flow](./09-navigation-flow.md) | Complete navigation and game flow | Medium | 03, 04, 05, 06 |
 | 10 | [Polish & Responsive](./10-polish-responsive.md) | Responsive design and polish | Medium | All above |
 | 11 | [Local Storage](./11-local-storage.md) | Settings and progress persistence | Low | 01, 08 |
+| 12 | [Note Notation Setting](./12-note-notation-setting.md) | C/D/E vs Do/Re/Mi toggle in settings | Medium | 02, 11 |
+| 13 | [Mixed Practice Screen](./13-mixed-practice-screen.md) | Random scales practice with levels | High | 02, 05, 06, 09 |
 
 ## Suggested Development Order
 
@@ -41,6 +43,10 @@ This folder contains all tasks required to build the Tonedoku MVP - a music scal
 9. **Task 09** - Navigation Flow
 10. **Task 10** - Polish & Responsive
 11. **Task 11** - Local Storage & Settings
+
+### Phase 6: Enhanced Features
+12. **Task 12** - Note Notation Setting
+13. **Task 13** - Mixed Practice Screen
 
 ## Technology Stack
 - **Framework**: React 18+ with TypeScript

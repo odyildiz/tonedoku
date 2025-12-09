@@ -8,7 +8,7 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const { soundEnabled, volume, toggleSound, setVolume } = useSettingsStore();
+  const { soundEnabled, volume, noteNotation, toggleSound, setVolume, setNoteNotation } = useSettingsStore();
 
   if (!isOpen) return null;
 
@@ -109,6 +109,37 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                   : undefined,
               }}
             />
+          </div>
+
+          {/* Note Notation Selector */}
+          <div>
+            <label className="text-base sm:text-lg font-semibold text-[var(--color-text)] block mb-3">
+              Note Notation
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setNoteNotation('standard')}
+                className={`flex flex-col items-center justify-center py-4 px-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface)] ${
+                  noteNotation === 'standard'
+                    ? 'bg-[var(--color-primary)] text-white shadow-lg scale-105'
+                    : 'bg-[var(--color-background)] text-[var(--color-text)] hover:bg-[var(--color-background)]/80'
+                }`}
+              >
+                <span className="text-sm sm:text-base font-bold">C D E</span>
+                <span className="text-xs sm:text-sm mt-1 opacity-80">Standard</span>
+              </button>
+              <button
+                onClick={() => setNoteNotation('solfege')}
+                className={`flex flex-col items-center justify-center py-4 px-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface)] ${
+                  noteNotation === 'solfege'
+                    ? 'bg-[var(--color-primary)] text-white shadow-lg scale-105'
+                    : 'bg-[var(--color-background)] text-[var(--color-text)] hover:bg-[var(--color-background)]/80'
+                }`}
+              >
+                <span className="text-sm sm:text-base font-bold">Do Re Mi</span>
+                <span className="text-xs sm:text-sm mt-1 opacity-80">Solfège</span>
+              </button>
+            </div>
           </div>
         </div>
 

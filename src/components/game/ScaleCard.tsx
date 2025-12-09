@@ -1,6 +1,7 @@
 
 import React from 'react';
 import type { ScaleDefinition } from '../../types/scales';
+import { useNoteDisplay } from '../../hooks/useNoteDisplay';
 
 interface ScaleCardProps {
     scale: ScaleDefinition;
@@ -8,6 +9,7 @@ interface ScaleCardProps {
 }
 
 const ScaleCard: React.FC<ScaleCardProps> = React.memo(({ scale, onClick }) => {
+    const displayNote = useNoteDisplay();
     const rootNote = scale.notes[0];
 
     return (
@@ -18,7 +20,7 @@ const ScaleCard: React.FC<ScaleCardProps> = React.memo(({ scale, onClick }) => {
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
             <span className="relative z-10 text-3xl sm:text-4xl font-bold text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
-                {rootNote.display}
+                {displayNote(rootNote)}
             </span>
 
             <span className="relative z-10 mt-1 sm:mt-2 text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider transition-colors duration-200 group-hover:text-[var(--color-text)]">

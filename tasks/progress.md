@@ -52,6 +52,28 @@
     - [x] 11.5 Persistence Integration
     - [x] 11.6 Storage Keys
 
+- [x] Task 12: Note Notation Setting
+    - [x] 12.1 Update Settings Store
+    - [x] 12.2 Update Storage Utilities
+    - [x] 12.3 Create Note Display Utility
+    - [x] 12.4 Update Settings Modal UI
+    - [x] 12.5 Update Components to Use Notation
+    - [x] 12.6 Create Custom Hook (Optional)
+
+## Pending Tasks
+
+- [ ] Task 13: Mixed Practice Screen
+    - [ ] 13.1 Create Mixed Practice Level Configuration
+    - [ ] 13.2 Add TypeScript Types
+    - [ ] 13.3 Create Mixed Question Generator
+    - [ ] 13.4 Create Mixed Level Selection Page
+    - [ ] 13.5 Create Mixed Practice Page
+    - [ ] 13.6 Update Game Store for Mixed Mode
+    - [ ] 13.7 Add Navigation Entry Point
+    - [ ] 13.8 Update Routing
+    - [ ] 13.9 Create Mixed Level Complete Component
+    - [ ] 13.10 Visual Feedback for Scale Changes
+
 ## Additional Improvements Completed
 
 - [x] Centered icons in rounded backgrounds (Header, HomePage, PracticePage)
@@ -63,8 +85,12 @@
 
 ## Project Status
 
-**Status**: ✅ Complete
+**MVP Status**: ✅ Complete
 **Build**: Successful (491.70 kB, gzip: 139.56 kB)
 **Server**: Ready for deployment
 
-All core features, polish tasks, and settings/storage have been completed. The app is fully functional, responsive, and optimized for production use across all devices. User preferences now persist across sessions with local storage integration.
+All core MVP features, polish tasks, and settings/storage have been completed. The app is fully functional, responsive, and optimized for production use across all devices.
+
+**Enhanced Features**: 🚧 In Progress
+- Task 12: Note Notation Setting ✅ Complete
+- Task 13: Mixed Practice Screen (Pending)
