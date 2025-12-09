@@ -65,9 +65,50 @@ This folder contains all tasks required to build the Tonedoku MVP - a music scal
 - Settings (sound on/off)
 - Responsive web design
 
-## Out of Scope (Future)
+## Future Features Backlog
+
+### High Priority
+- [ ] Keyboard navigation (arrow keys, Enter, number keys)
+- [ ] Progress persistence (save completed levels, show indicators)
+- [ ] Improved mobile experience (more device testing, landscape)
+
+### Medium Priority
+- [ ] Additional scale types (Natural/Harmonic/Melodic Minor, Modes)
+- [ ] Scoring system (points, streaks, time-based)
+- [ ] Statistics tracking (accuracy, time, most missed notes)
+- [ ] Improved animations (celebrations, note highlights)
+
+### Low Priority
+- [ ] Ear training mode (note/interval/scale identification)
+- [ ] Pentatonic and Blues scales
+- [ ] Dark mode with system preference detection
+- [ ] PWA support (offline, install prompt)
+- [ ] User accounts and cloud sync (requires backend)
+- [ ] Leaderboards (requires backend)
+
+---
+
+## Future Roadmap
+
+### Phase 7: Enhanced Practice
+- Minor scales (Natural, Harmonic, Melodic)
+- Scoring system with points
+- Progress persistence
+- Statistics dashboard
+
+### Phase 8: Gamification
+- Achievements and badges
+- Daily challenges
+- Streak tracking
 - Lives/attempts system
-- Points/scoring
-- Other scale types (Minor, Modal, etc.)
+
+### Phase 9: Advanced Features
 - User accounts
-- Mobile apps
+- Cloud synchronization
+- Ear training mode
+- Multiple instruments
+
+### Phase 10: Platform Expansion
+- Mobile apps (React Native)
+- Social features
+- Community challenges

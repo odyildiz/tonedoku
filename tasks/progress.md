@@ -94,3 +94,17 @@ All core MVP features, polish tasks, and settings/storage have been completed. T
 **Enhanced Features**: 🚧 In Progress
 - Task 12: Note Notation Setting ✅ Complete
 - Task 13: Mixed Practice Screen (Pending)
+
+---
+
+## Known Issues
+
+- [ ] Audio may not initialize on iOS without user gesture
+- [ ] Scale sequence timing may vary on slower devices
+
+## Technical Debt
+
+- [ ] Add unit tests for question generator
+- [ ] Add unit tests for answer checker
+- [ ] Add integration tests for game flow
+- [ ] Consider extracting audio logic into a hook

@@ -1,5 +1,7 @@
 # Product Requirements Document: Tonedoku
 
+> **For AI Agents**: Check this file to understand product features, user stories, and what to build. For technical implementation details, see [docs/TECHNICAL.md](docs/TECHNICAL.md). For UI specifications, see [docs/DESIGN.md](docs/DESIGN.md).
+
 ## 1. Overview
 
 ### 1.1 Product Name
@@ -21,7 +23,7 @@ Tonedoku is an interactive music education web app that helps users learn and me
 ### 2.1 Main Screen (Scale Selection)
 - Display list of available music scales organized by category
 - User can freely select any scale to practice
-- Settings button
+- Settings button for preferences
 
 **Scale Categories (MVP: Major only, extensible for future)**
 - Major Scales (12 keys)
@@ -34,8 +36,8 @@ Tonedoku is an interactive music education web app that helps users learn and me
 #### 2.2.1 Game Board
 - Display all 8 notes of the selected scale (root to octave)
 - Example: C Major displays `C - D - E - F - G - A - B - C`
-- One note slot is empty (the missing note to find)
-- Clear visual indication of the empty slot
+- One or more note slots are empty (the missing notes to find)
+- Clear visual indication of empty slots
 
 #### 2.2.2 Note Selection Interface
 - **Note Selector**: C, D, E, F, G, A, B
@@ -50,7 +52,7 @@ Tonedoku is an interactive music education web app that helps users learn and me
 **On Incorrect Answer:**
 - Game field turns red
 - Visual shake/warning animation
-- Optional: incorrect buzzer sound
+- Error buzzer sound
 - User can try again
 
 **On Correct Answer:**
@@ -58,13 +60,22 @@ Tonedoku is an interactive music education web app that helps users learn and me
 - Play the sound of the found note (sustained)
 - Then play each note in the scale sequentially (ascending, all 8 notes)
 - Celebration animation
-- *[Future: Points/stars can be added here]*
 
 ### 2.3 Navigation
 - **Back Button**: Return to previous question
 - **Next Button**: Proceed to next question (after correct answer)
 - **Home Button**: Return to main scale selection screen
 - Progress indicator showing current position in level (e.g., "3/8")
+
+### 2.4 Mixed Practice Mode
+- Practice multiple scales together in one session
+- Questions draw from selected scale pool
+- Helps reinforce learning across different keys
+
+### 2.5 Settings
+- Audio on/off toggle
+- Volume control
+- Note notation preference (Standard: C-D-E / Solfege: Do-Re-Mi)
 
 ---
 
@@ -107,24 +118,14 @@ All scales display 8 notes (root to octave):
 
 ---
 
-## 4. Available Scales (MVP)
+## 4. Available Scales
 
-### 4.1 Major Scales (12 keys)
-- C Major
-- G Major
-- D Major
-- A Major
-- E Major
-- B Major
-- F# Major (Gb Major)
-- F Major
-- Bb Major
-- Eb Major
-- Ab Major
-- Db Major
+### 4.1 Major Scales (12 keys) - MVP
+- C Major, G Major, D Major, A Major, E Major, B Major
+- F# Major (Gb Major), F Major, Bb Major, Eb Major, Ab Major, Db Major
 
 ### 4.2 Future Scale Types (Extensible Structure)
-The codebase will be structured to easily add:
+The codebase is structured to easily add:
 - Natural Minor Scales
 - Harmonic Minor Scales
 - Melodic Minor Scales
@@ -135,248 +136,38 @@ The codebase will be structured to easily add:
 
 ---
 
-## 5. Technical Requirements
+## 5. Audio Feedback Flow
 
-### 5.1 Platform Requirements
-
-**Web Only (MVP)**
-- Modern browsers: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- Responsive design for desktop and tablet
-- Mobile-friendly touch interface
-
-### 5.2 Technology Stack
-- **Framework**: React with TypeScript
-- **Styling**: Tailwind CSS or styled-components
-- **Audio**: Tone.js or Howler.js
-- **State Management**: React Context or Zustand
-- **Build Tool**: Vite
-
-### 5.3 Audio Requirements
-- **Format**: MP3 for compatibility
-- **Sample Rate**: 44.1kHz minimum
-- **Note Samples**: Piano notes for at least 2 octaves (C3-C5)
-- **Playback**:
-  - Single note: 1-2 second sustained
-  - Scale sequence: 0.4 second per note
-- **Audio Library**: Tone.js (synthesis) or Howler.js (samples)
-
-### 5.4 Data Storage
-
-**Local Storage (MVP)**
-- Current level per scale
-- Settings and preferences
-
-**Extensible for Future:**
-- User accounts and cloud sync
-- Progress tracking and statistics
-- Scoring and achievements
-
-### 5.5 Performance Requirements
-- **Load Time**: < 3 seconds initial load
-- **Audio Latency**: < 100ms from interaction to sound
-- **Animation**: 60 FPS for all transitions
-
-### 5.6 Accessibility
-- Color blind friendly indicators (patterns in addition to colors)
-- Keyboard navigation support
-- Screen reader support for note names
-- Focus indicators for interactive elements
-
----
-
-## 6. User Interface Specifications
-
-### 6.1 Color Scheme
-| Element | Color | Hex Code |
-|---------|-------|----------|
-| Primary | Deep Purple | #6B4EAA |
-| Secondary | Teal | #26A69A |
-| Success | Green | #4CAF50 |
-| Error | Red | #F44336 |
-| Background | Off-White | #FAFAFA |
-| Text | Dark Gray | #212121 |
-
-### 6.2 Screen Layouts
-
-#### Main Screen
-```
-┌─────────────────────────────┐
-│  ⚙️              TONEDOKU    │
-│                              │
-│  ─────────────────────────── │
-│                              │
-│  ┌─────────────────────────┐ │
-│  │ 🎵 MAJOR SCALES         │ │
-│  └─────────────────────────┘ │
-│                              │
-│  ┌─────┐ ┌─────┐ ┌─────┐    │
-│  │  C  │ │  G  │ │  D  │    │
-│  └─────┘ └─────┘ └─────┘    │
-│  ┌─────┐ ┌─────┐ ┌─────┐    │
-│  │  A  │ │  E  │ │  B  │    │
-│  └─────┘ └─────┘ └─────┘    │
-│  ┌─────┐ ┌─────┐ ┌─────┐    │
-│  │  F# │ │  F  │ │  Bb │    │
-│  └─────┘ └─────┘ └─────┘    │
-│  ┌─────┐ ┌─────┐ ┌─────┐    │
-│  │  Eb │ │  Ab │ │  Db │    │
-│  └─────┘ └─────┘ └─────┘    │
-│                              │
-└─────────────────────────────┘
-```
-
-#### Scale Level Selection
-```
-┌─────────────────────────────┐
-│  🏠         C Major          │
-│  ─────────────────────────── │
-│                              │
-│   Select Level               │
-│                              │
-│  ┌─────────────────────────┐ │
-│  │ Level 1 - 1 missing     │ │
-│  └─────────────────────────┘ │
-│  ┌─────────────────────────┐ │
-│  │ Level 2 - 1 missing     │ │
-│  └─────────────────────────┘ │
-│  ┌─────────────────────────┐ │
-│  │ Level 3 - 2 missing     │ │
-│  └─────────────────────────┘ │
-│  ┌─────────────────────────┐ │
-│  │ Level 4 - 3 missing     │ │
-│  └─────────────────────────┘ │
-│  ┌─────────────────────────┐ │
-│  │ Level 5 - 4 missing     │ │
-│  └─────────────────────────┘ │
-│                              │
-└─────────────────────────────┘
-```
-
-#### Practice Screen
-```
-┌─────────────────────────────┐
-│  🏠    C Major - Level 1  3/8│
-│  ─────────────────────────── │
-│                              │
-│   C   D   E  [?]  G   A   B   C  │
-│                              │
-│  ─────────────────────────── │
-│                              │
-│   ┌───┬───┬───┬───┬───┬───┬───┐ │
-│   │ C │ D │ E │ F │ G │ A │ B │ │
-│   └───┴───┴───┴───┴───┴───┴───┘ │
-│                              │
-│   ┌─────┬─────┬─────┐        │
-│   │  ♮  │  ♯  │  ♭  │        │
-│   └─────┴─────┴─────┘        │
-│                              │
-│        [ SUBMIT ]            │
-│                              │
-│  ◀ Back          Next ▶      │
-└─────────────────────────────┘
-```
-
-### 6.3 Animation Specifications
-| Animation | Duration | Easing |
-|-----------|----------|--------|
-| Screen transition | 300ms | ease-in-out |
-| Correct answer | 500ms | bounce |
-| Incorrect shake | 400ms | elastic |
-| Note highlight | 200ms | ease-out |
-| Button press | 100ms | ease-in |
-
----
-
-## 7. Audio Feedback Flow
-
-### 7.1 Correct Answer Sequence
+### 5.1 Correct Answer Sequence
 1. **Success chime** (0.3s)
 2. **Found note plays** (1.5s sustained)
 3. **Brief pause** (0.3s)
 4. **Scale plays ascending** - all 8 notes (0.4s per note = 3.2s total)
 
-### 7.2 Incorrect Answer Sequence
+### 5.2 Incorrect Answer Sequence
 1. **Error buzzer** (0.3s)
 2. **Visual feedback** (red flash + shake)
 3. **Reset to selection state** (user can try again)
 
 ---
 
-## 8. Project Structure (Extensibility)
+## 6. User Stories
 
-### 8.1 Scale Configuration
-Scales should be defined in a configuration file for easy extension:
+### As a music student:
+- I want to select a scale to practice so I can focus on specific keys
+- I want immediate feedback when I answer so I know if I'm correct
+- I want to hear the notes played so I can associate sounds with note names
+- I want difficulty levels so I can progress from easy to challenging
 
-```typescript
-// Example structure for future extensibility
-interface ScaleDefinition {
-  id: string;
-  name: string;
-  category: ScaleCategory;
-  notes: string[];  // 8 notes including octave
-  levels: LevelConfig[];
-}
+### As a self-taught musician:
+- I want to practice all 12 major keys so I become fluent in all scales
+- I want mixed practice so I can test my knowledge across scales
+- I want to switch between notation systems (standard/solfege)
 
-type ScaleCategory = 'major' | 'minor' | 'modal' | 'pentatonic' | 'other';
-
-interface LevelConfig {
-  level: number;
-  missingNotes: number;
-  questionsCount: number;
-}
-```
-
-### 8.2 Gamification Hooks (Future)
-Structure code to easily add:
-- Points/scoring system
-- Lives/attempts system
-- Achievements
-- Progress tracking
-- Leaderboards
-
----
-
-## 9. Future Enhancements
-
-### Phase 2
-- Additional scale types (Minor, Modal)
-- Scoring system
-- Lives/attempts
-- Progress persistence
-
-### Phase 3
-- User accounts
-- Achievements and badges
-- Statistics and analytics
-- Ear training mode
-
-### Phase 4
-- Mobile apps (React Native)
-- Multiple instrument sounds
-- Social features
-
----
-
-## 10. Development Milestones
-
-### Milestone 1: Core MVP
-- Main screen with 12 Major scales
-- Scale selection screen
-- Level selection screen
-- Practice screen with note selection
-- Correct/incorrect feedback (visual)
-- Navigation (Back, Next, Home)
-
-### Milestone 2: Audio
-- Note playback for correct answers
-- Scale sequence playback
-- Sound effects (success/error)
-
-### Milestone 3: Polish
-- Animations and transitions
-- Responsive design
-- Local storage for progress
-- Accessibility features
+### As a music teacher:
+- I want my students to have a tool that reinforces scale knowledge
+- I want progressive difficulty so students can build confidence
+- I want audio playback so students develop ear-note associations
 
 ---
 
@@ -386,7 +177,7 @@ Structure code to easily add:
 W - W - H - W - W - W - H
 (W = Whole step, H = Half step)
 
-### Note Order
+### Note Order (Chromatic)
 C - C#/Db - D - D#/Eb - E - F - F#/Gb - G - G#/Ab - A - A#/Bb - B - C
 
 ### Enharmonic Equivalents
