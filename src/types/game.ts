@@ -8,6 +8,19 @@ export interface Question {
     userAnswers?: Map<number, Note>; // To track what user entered for which position
 }
 
+export interface MixedLevelConfig {
+    level: number;
+    missingNotes: number;
+    questionsCount: number;
+    scaleCount: number; // How many different scales to include
+    allowedPositions?: number[];
+}
+
+export interface MixedQuestion extends Question {
+    scaleName: string; // Display which scale this question is from
+    scaleId: string;   // Scale ID for reference
+}
+
 export interface GameState {
     // Current Game Configuration
     scale: ScaleDefinition | null;
@@ -23,4 +36,9 @@ export interface GameState {
 
     // Feedback State
     answerStatus: 'pending' | 'correct' | 'incorrect';
+
+    // Mixed Practice Mode
+    mixedMode: boolean;
+    mixedLevel: number | null;
+    currentScaleName: string | null; // For display during mixed mode
 }

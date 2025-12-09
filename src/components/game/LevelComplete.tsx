@@ -8,6 +8,7 @@ interface LevelCompleteProps {
     onPlayAgain: () => void;
     onNextLevel?: () => void;
     hasNextLevel: boolean;
+    isMixedMode?: boolean;
 }
 
 const LevelComplete: React.FC<LevelCompleteProps> = React.memo(({
@@ -15,7 +16,8 @@ const LevelComplete: React.FC<LevelCompleteProps> = React.memo(({
     levelNumber,
     onPlayAgain,
     onNextLevel,
-    hasNextLevel
+    hasNextLevel,
+    isMixedMode = false
 }) => {
     const navigate = useNavigate();
 
@@ -38,7 +40,10 @@ const LevelComplete: React.FC<LevelCompleteProps> = React.memo(({
                         Level Complete!
                     </h2>
                     <p className="text-base sm:text-lg text-[var(--color-text-muted)]">
-                        You've mastered {scaleName} - Level {levelNumber}
+                        {isMixedMode
+                            ? `You've completed ${scaleName} - Level ${levelNumber}`
+                            : `You've mastered ${scaleName} - Level ${levelNumber}`
+                        }
                     </p>
                 </div>
 
@@ -63,10 +68,16 @@ const LevelComplete: React.FC<LevelCompleteProps> = React.memo(({
 
                     <Button
                         variant="outline"
-                        onClick={() => navigate(-1)}
+                        onClick={() => {
+                            if (isMixedMode) {
+                                navigate('/mixed');
+                            } else {
+                                navigate(-1);
+                            }
+                        }}
                         className="w-full"
                     >
-                        Back to Levels
+                        {isMixedMode ? 'Back to Mixed Levels' : 'Back to Levels'}
                     </Button>
                 </div>
             </div>

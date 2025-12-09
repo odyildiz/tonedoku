@@ -32,12 +32,47 @@ const HomePage: React.FC = () => {
                 </button>
             </header>
 
-            <main>
+            <main className="space-y-8 sm:space-y-10">
                 <ScaleCategory
                     title="Major Scales"
                     scales={majorScales}
                     onScaleSelect={handleScaleSelect}
                 />
+
+                {/* Mixed Practice Section */}
+                <div className="pt-6 sm:pt-8 border-t border-[var(--color-surface)]">
+                    <button
+                        onClick={() => navigate('/mixed')}
+                        className="group w-full rounded-xl border-2 border-[var(--color-primary)]/30 bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-surface)]/50 p-6 sm:p-8 text-left transition-all hover:border-[var(--color-primary)] hover:shadow-lg hover:shadow-[var(--color-primary)]/10 active:scale-[0.99] cursor-pointer"
+                    >
+                        <div className="flex items-center gap-4">
+                            {/* Icon */}
+                            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-8 sm:h-8">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 3h5v5M21 3 11 13"></path>
+                                </svg>
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1">
+                                <h3 className="text-xl sm:text-2xl font-bold text-[var(--color-text)] mb-1 group-hover:text-[var(--color-primary)] transition-colors">
+                                    Mixed Practice
+                                </h3>
+                                <p className="text-sm sm:text-base text-[var(--color-text-muted)]">
+                                    Practice multiple scales at random
+                                </p>
+                            </div>
+
+                            {/* Arrow */}
+                            <div className="flex-shrink-0 text-[var(--color-text-muted)] group-hover:text-[var(--color-primary)] group-hover:translate-x-1 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-7 sm:h-7">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
             </main>
 
             <SettingsModal

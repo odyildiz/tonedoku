@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import HomePage from './pages/HomePage';
 import LevelSelection from './pages/LevelSelection';
 import PracticePage from './pages/PracticePage';
+import MixedLevelSelection from './pages/MixedLevelSelection';
+import MixedPracticePage from './pages/MixedPracticePage';
 import { useSettingsStore } from './stores/settingsStore';
 import './App.css';
 
@@ -20,6 +22,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/scale/:scaleId" element={<LevelSelection />} />
           <Route path="/scale/:scaleId/level/:levelId" element={<PracticePage />} />
+          <Route path="/mixed" element={<MixedLevelSelection />} />
+          <Route path="/mixed/:levelId" element={<MixedPracticePage />} />
         </Routes>
       </div>
     </BrowserRouter>
