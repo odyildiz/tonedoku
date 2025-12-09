@@ -8,7 +8,7 @@ import Button from '../components/common/Button';
 import LevelComplete from '../components/game/LevelComplete';
 import { useGameStore } from '../stores/gameStore';
 import { useAudioSettings } from '../hooks/useAudioSettings';
-import { playCorrectSequence, playIncorrectSound, initAudio } from '../utils/audio';
+import { playCorrectSequence, playIncorrectSound, playNote, initAudio, stopAllAudio } from '../utils/audio';
 import { mixedLevels } from '../data/mixedLevels';
 import type { NoteName } from '../types/scales';
 import type { MixedQuestion } from '../types/game';
@@ -24,6 +24,7 @@ const MixedPracticePage: React.FC = () => {
         selectedNote,
         selectedAccidental,
         answerStatus,
+        lastCorrectNote,
         mixedMode,
         mixedLevel,
         currentScaleName,
@@ -34,7 +35,8 @@ const MixedPracticePage: React.FC = () => {
         nextQuestion,
         previousQuestion,
         resetSelection,
-        resetGame
+        resetGame,
+        clearLastCorrectNote
     } = useGameStore();
 
     const { isAudioEnabled, toggleAudio } = useAudioSettings();
@@ -43,6 +45,8 @@ const MixedPracticePage: React.FC = () => {
 
     // Track previous location to detect browser back/forward navigation
     const prevLocationRef = useRef(location.pathname);
+    // Track if game was initialized for this session (prevents auto-play on mount)
+    const gameInitializedRef = useRef(false);
 
     // Derived state
     const currentQuestion = questions[currentQuestionIndex] as MixedQuestion;
@@ -88,11 +92,23 @@ const MixedPracticePage: React.FC = () => {
         if (levelId) {
             const levelNum = parseInt(levelId, 10);
             if (levelNum >= 1 && levelNum <= 5) {
+                gameInitializedRef.current = false; // Reset before init
                 initMixedGame(levelNum);
                 setShowCompletion(false);
+                // Mark as initialized after state update
+                gameInitializedRef.current = true;
             }
         }
     }, [levelId, initMixedGame]);
+
+    // Cleanup on unmount (when component is removed from DOM)
+    useEffect(() => {
+        return () => {
+            // Stop any playing/scheduled audio when navigating away
+            stopAllAudio();
+            gameInitializedRef.current = false;
+        };
+    }, []);
 
     // Initialize Audio Context on first user interaction
     useEffect(() => {
@@ -113,6 +129,9 @@ const MixedPracticePage: React.FC = () => {
 
     // Audio Feedback & Answer Handling
     useEffect(() => {
+        // Don't play audio until game is initialized (prevents auto-play on mount)
+        if (!gameInitializedRef.current) return;
+
         if (answerStatus === 'incorrect') {
             if (isAudioEnabled) playIncorrectSound();
 
@@ -120,20 +139,27 @@ const MixedPracticePage: React.FC = () => {
                 resetSelection();
             }, 600);
             return () => clearTimeout(timer);
-        } else if (answerStatus === 'correct' && currentQuestion) {
+        } else if (answerStatus === 'correct' && currentQuestion && lastCorrectNote) {
+            // Last correct answer - play full scale sequence
             if (isAudioEnabled) {
                 setIsApplauding(true);
-
-                if (selectedNote && selectedAccidental) {
-                    playCorrectSequence(selectedNote, selectedAccidental, currentQuestion.scaleNotes);
-                }
+                playCorrectSequence(lastCorrectNote.name, lastCorrectNote.accidental, currentQuestion.scaleNotes);
 
                 const duration = 5000;
-                const timer = setTimeout(() => setIsApplauding(false), duration);
+                const timer = setTimeout(() => {
+                    setIsApplauding(false);
+                    clearLastCorrectNote();
+                }, duration);
                 return () => clearTimeout(timer);
             }
+        } else if (lastCorrectNote && answerStatus === 'pending') {
+            // Intermediate correct answer - play just the note
+            if (isAudioEnabled) {
+                playNote(lastCorrectNote.name, lastCorrectNote.accidental, 4, '4n');
+                clearLastCorrectNote();
+            }
         }
-    }, [answerStatus, isAudioEnabled, currentQuestion, resetSelection, selectedNote, selectedAccidental]);
+    }, [answerStatus, isAudioEnabled, currentQuestion, resetSelection, lastCorrectNote, clearLastCorrectNote]);
 
     // Derived state for display - slots calculation using useMemo
     const slots = useMemo(() => {

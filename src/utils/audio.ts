@@ -124,3 +124,16 @@ export const playCorrectSequence = async (
         previousNoteIndex = noteIndex;
     });
 };
+
+// Stop all currently playing and scheduled audio
+export const stopAllAudio = () => {
+    // Dispose synths to cancel all scheduled events
+    if (synth) {
+        synth.dispose();
+        synth = null;
+    }
+    if (errorSynth) {
+        errorSynth.dispose();
+        errorSynth = null;
+    }
+};

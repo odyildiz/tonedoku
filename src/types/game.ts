@@ -36,6 +36,7 @@ export interface GameState {
 
     // Feedback State
     answerStatus: 'pending' | 'correct' | 'incorrect';
+    lastCorrectNote: { name: NoteName; accidental: Accidental } | null;
 
     // Mixed Practice Mode
     mixedMode: boolean;

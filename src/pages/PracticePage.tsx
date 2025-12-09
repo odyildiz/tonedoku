@@ -8,7 +8,7 @@ import Button from '../components/common/Button';
 import LevelComplete from '../components/game/LevelComplete';
 import { useGameStore } from '../stores/gameStore';
 import { useAudioSettings } from '../hooks/useAudioSettings';
-import { playCorrectSequence, playIncorrectSound, initAudio } from '../utils/audio';
+import { playCorrectSequence, playIncorrectSound, playNote, initAudio, stopAllAudio } from '../utils/audio';
 import { majorScales } from '../data/scales';
 import { levels } from '../data/levels';
 import type { NoteName } from '../types/scales';
@@ -28,6 +28,7 @@ const PracticePage: React.FC = () => {
         selectedNote,
         selectedAccidental,
         answerStatus,
+        lastCorrectNote,
         initGame,
         selectNote,
         selectAccidental,
@@ -35,7 +36,8 @@ const PracticePage: React.FC = () => {
         nextQuestion,
         previousQuestion,
         resetSelection,
-        resetGame
+        resetGame,
+        clearLastCorrectNote
     } = useGameStore();
 
     const { isAudioEnabled, toggleAudio } = useAudioSettings();
@@ -44,6 +46,8 @@ const PracticePage: React.FC = () => {
 
     // Track previous location to detect browser back/forward navigation
     const prevLocationRef = useRef(location.pathname);
+    // Track if game was initialized for this session (prevents auto-play on mount)
+    const gameInitializedRef = useRef(false);
 
     // Derived state
     const currentQuestion = questions[currentQuestionIndex];
@@ -106,8 +110,11 @@ const PracticePage: React.FC = () => {
         if (scaleId && levelId) {
             const levelNum = parseInt(levelId, 10);
             if (levelNum >= 1 && levelNum <= 5) {
+                gameInitializedRef.current = false; // Reset before init
                 initGame(scaleId, levelNum);
                 setShowCompletion(false);
+                // Mark as initialized after state update
+                gameInitializedRef.current = true;
             }
         }
     }, [scaleId, levelId, initGame]);
@@ -115,10 +122,9 @@ const PracticePage: React.FC = () => {
     // Cleanup on unmount (when component is removed from DOM)
     useEffect(() => {
         return () => {
-            // This cleanup runs when the component unmounts
-            // (e.g., when navigating away via browser back button to a non-practice page)
-            // The resetGame in the location effect above handles most cases,
-            // but this ensures cleanup on any unmount scenario
+            // Stop any playing/scheduled audio when navigating away
+            stopAllAudio();
+            gameInitializedRef.current = false;
         };
     }, []);
 
@@ -142,6 +148,9 @@ const PracticePage: React.FC = () => {
 
     // Audio Feedback & Answer Handling
     useEffect(() => {
+        // Don't play audio until game is initialized (prevents auto-play on mount)
+        if (!gameInitializedRef.current) return;
+
         if (answerStatus === 'incorrect') {
             if (isAudioEnabled) playIncorrectSound();
 
@@ -149,49 +158,27 @@ const PracticePage: React.FC = () => {
                 resetSelection();
             }, 600);
             return () => clearTimeout(timer);
-        } else if (answerStatus === 'correct' && currentQuestion) {
-            if (isAudioEnabled) {
-                // Determine active position to know which note was found
-                // Task 8.4: note(1.5) + pause(0.3) + scale(3.2) = 5.0s
-
-                // Actually, logic in store sets answerStatus='correct' when ALL are answered.
-                // But we might want to play the sequence for the LAST note found?
-                // Or looking at the task: "Correct Answer Audio Sequence... Play found note... Play full scale" (Task 8.4)
-                // If we complete the question, we probably found the last missing note.
-                // Let's assume we play the sequence for the scale.
-
-                // Which note was "found"? It uses 'selectedNote'.
-                // If answerStatus acts on the last submission.
-
-                // We'll just pass the selected note from store if it's there, or the last one from question.
-                // But resetSelection might clear `selectedNote`? No, resetSelection is not called on correct.
-
-                // Wait, if answerStatus is 'correct', it means the whole QUESTION is correct?
-                // "108: answerStatus: allAnswered ? 'correct' : 'pending',"
-                // Yes. So we play the full sequence.
-
+        } else if (answerStatus === 'correct' && currentQuestion && lastCorrectNote) {
+            // Last correct answer - play full scale sequence
+            if (isAudioEnabled && scale) {
                 setIsApplauding(true);
-                // 3.2s total duration for scale. + 1.5s note + 0.3s pause = ~5s.
-                // Task 8.4: note(1.5) + pause(0.3) + scale(3.2) = 5.0s
-
-                // We need the Note object.
-                // userAnswers has it.
-                // Let's get the note corresponding to user's last action?
-                // It's tricky to get the exact note object without passing it.
-                // But we can reconstruct or pick one.
-                // Let's just pick the root or the first note if unsure, OR simpler:
-                // We know `selectedNote` and `selectedAccidental` are still in store state when correct.
-
-                if (selectedNote && selectedAccidental && scale) {
-                    playCorrectSequence(selectedNote, selectedAccidental, scale.notes);
-                }
+                playCorrectSequence(lastCorrectNote.name, lastCorrectNote.accidental, scale.notes);
 
                 const duration = 5000; // 5s
-                const timer = setTimeout(() => setIsApplauding(false), duration);
+                const timer = setTimeout(() => {
+                    setIsApplauding(false);
+                    clearLastCorrectNote();
+                }, duration);
                 return () => clearTimeout(timer);
             }
+        } else if (lastCorrectNote && answerStatus === 'pending') {
+            // Intermediate correct answer - play just the note
+            if (isAudioEnabled) {
+                playNote(lastCorrectNote.name, lastCorrectNote.accidental, 4, '4n');
+                clearLastCorrectNote();
+            }
         }
-    }, [answerStatus, isAudioEnabled, currentQuestion, scale, resetSelection, selectedNote, selectedAccidental]);
+    }, [answerStatus, isAudioEnabled, currentQuestion, scale, resetSelection, lastCorrectNote, clearLastCorrectNote]);
 
 
     // Derived state for display - slots calculation using useMemo

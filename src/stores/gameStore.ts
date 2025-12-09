@@ -18,6 +18,7 @@ interface GameActions {
     previousQuestion: () => void;
     resetSelection: () => void;
     resetGame: () => void;
+    clearLastCorrectNote: () => void;
 }
 
 type GameStore = GameState & GameActions;
@@ -31,6 +32,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     selectedNote: null,
     selectedAccidental: 'natural',
     answerStatus: 'pending',
+    lastCorrectNote: null,
     mixedMode: false,
     mixedLevel: null,
     currentScaleName: null,
@@ -54,6 +56,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             selectedNote: null,
             selectedAccidental: 'natural',
             answerStatus: 'pending',
+            lastCorrectNote: null,
             mixedMode: false,
             mixedLevel: null,
             currentScaleName: null,
@@ -78,6 +81,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             selectedNote: null,
             selectedAccidental: 'natural',
             answerStatus: 'pending',
+            lastCorrectNote: null,
             mixedMode: true,
             mixedLevel: levelId,
             currentScaleName: questions[0]?.scaleName || null,
@@ -139,12 +143,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
             set({
                 questions: newQuestions,
                 answerStatus: allAnswered ? 'correct' : 'pending',
+                lastCorrectNote: { name: selectedNote, accidental: selectedAccidental },
                 selectedNote: allAnswered ? selectedNote : null,
                 selectedAccidental: allAnswered ? selectedAccidental : 'natural'
             });
 
         } else {
-            set({ answerStatus: 'incorrect' });
+            set({ answerStatus: 'incorrect', lastCorrectNote: null });
         }
     },
 
@@ -159,6 +164,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
                 selectedNote: null,
                 selectedAccidental: 'natural',
                 answerStatus: nextQuestionComplete ? 'correct' : 'pending',
+                lastCorrectNote: null,
                 currentScaleName: mixedMode && nextQuestion ? (nextQuestion as any).scaleName : null,
             });
         }
@@ -175,6 +181,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
                 selectedNote: null,
                 selectedAccidental: 'natural',
                 answerStatus: prevQuestionComplete ? 'correct' : 'pending',
+                lastCorrectNote: null,
                 currentScaleName: mixedMode && prevQuestion ? (prevQuestion as any).scaleName : null,
             });
         }
@@ -185,7 +192,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         set({
             selectedNote: null,
             selectedAccidental: 'natural',
-            answerStatus: 'pending'
+            answerStatus: 'pending',
+            lastCorrectNote: null
         });
     },
 
@@ -198,9 +206,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
             selectedNote: null,
             selectedAccidental: 'natural',
             answerStatus: 'pending',
+            lastCorrectNote: null,
             mixedMode: false,
             mixedLevel: null,
             currentScaleName: null,
         });
+    },
+
+    clearLastCorrectNote: () => {
+        set({ lastCorrectNote: null });
     }
 }));
